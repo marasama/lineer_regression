@@ -3,7 +3,9 @@
 #include <fstream>
 #include <cstdlib>
 #include <map>
+#include <vector>
 #include <math.h>
+#include <limits>
 
 typedef struct weight_and_bias
 {
@@ -44,6 +46,9 @@ void read_dataset(std::string filename, std::map<double, double> &data)
         std::cerr << "Couldn't open the dataset file" << std::endl;
         exit(1);
     }
+    double max_price = std::numeric_limits<double>::min();
+    double max_mileage = std::numeric_limits<double>::min();
+    std::vector<std::pair<double, double>> tmpData;
     std::string line;
     std::getline(file, line);
     while (std::getline(file, line))
@@ -52,7 +57,18 @@ void read_dataset(std::string filename, std::map<double, double> &data)
         double price, mileage;
         char comma;
         ss >> mileage >> comma >> price;
-        data[mileage] = price;
+        tmpData.push_back({mileage, price});
+
+        if (price < max_price)
+            max_price = price;
+        if (mileage > max_mileage)
+            max_mileage = mileage;
+    }
+
+    for (std::vector<std::pair<double, double>>::iterator it = tmpData.begin(); it != tmpData.end(); ++it)
+    {
+        double normalized_value = it->first / max_mileage;
+        data[normalized_value] = it->second;
     }
 }
 
@@ -150,7 +166,7 @@ int main(int argc, char **argv)
 
         specs.weight -= learning_rate * dW;
         specs.bias -= learning_rate * dB;
-        //cost = calculate_cost(dataset, specs.weight, specs.bias);
+        cost = calculate_cost(dataset, specs.weight, specs.bias);
     }
 
     std::ofstream out("specs");
