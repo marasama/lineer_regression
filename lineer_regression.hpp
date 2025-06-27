@@ -20,13 +20,13 @@ class lineer_regression
         double _weight = 0;
         double _bias = 0;
         
-        std::map<double, double> dataset;
-
+        
         double mean_mileage = 0;
         double std_mileage = 1;
         double mean_price = 0;
         double std_price = 1;
     public:
+        std::map<double, double> dataset;
         lineer_regression()
         {
             _learning_rate = 0;

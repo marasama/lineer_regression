@@ -9,7 +9,6 @@
 #include "lineer_regression.hpp"
 
 
-
 int main(int argc, char **argv)
 { 
     if (argc != 4)
@@ -46,8 +45,6 @@ int main(int argc, char **argv)
     lineer_regression zort(learning_rate, maximum_iteration, dataset_file);
 
     zort.read_dataset();
-
-    zort.read_weight_bias();
 
     zort.train();
 
